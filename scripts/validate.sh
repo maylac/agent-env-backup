@@ -12,7 +12,7 @@ fail() {
 check_no_matches() {
   local label="$1"
   local pattern="$2"
-  if rg -n --hidden --glob '!.git/**' --glob '!*.png' --glob '!*.jpg' --glob '!*.webp' "$pattern" "$ROOT" >/tmp/agent-env-backup-rg.out 2>/dev/null; then
+  if rg -n --hidden --glob '!.git/**' --glob '!**/.git/**' --glob '!*.png' --glob '!*.jpg' --glob '!*.webp' "$pattern" "$ROOT" >/tmp/agent-env-backup-rg.out 2>/dev/null; then
     printf '%s\n' "$label" >&2
     sed -n '1,80p' /tmp/agent-env-backup-rg.out >&2
     failed=1
