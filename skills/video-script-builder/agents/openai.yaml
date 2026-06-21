@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Script Builder"
+  short_description: "Write scripts, storyboards, and narration"
+  default_prompt: "Use $video-script-builder to turn this topic into a publish-ready video script."

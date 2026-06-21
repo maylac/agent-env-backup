@@ -1,0 +1,4 @@
+interface:
+  display_name: "HyperFrames Video Producer"
+  short_description: "Build, render, and verify HyperFrames videos"
+  default_prompt: "Use $hyperframes-video-producer to create a HyperFrames video from this script and storyboard."

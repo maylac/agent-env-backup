@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Channel Publisher"
+  short_description: "Select channels and prep videos for publishing"
+  default_prompt: "Use $video-channel-publisher to choose channels and prepare this video for publication."

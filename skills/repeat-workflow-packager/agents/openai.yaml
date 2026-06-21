@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repeat Workflow Packager"
+  short_description: "Package repeated work into skills"
+  default_prompt: "Use $repeat-workflow-packager to review my recent work and package repeated workflows."

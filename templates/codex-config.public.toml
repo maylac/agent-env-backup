@@ -1,0 +1,71 @@
+# Public-safe Codex config template.
+# Do not paste live bearer tokens, auth files, sqlite state, or local cache paths.
+
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+
+[tui]
+status_line = [
+    "model-with-reasoning",
+    "current-dir",
+    "git-branch",
+    "context-remaining",
+    "context-used",
+    "five-hour-limit",
+    "weekly-limit",
+]
+status_line_use_colors = true
+
+[model_providers.fugu]
+name = "Sakana Fugu"
+base_url = "https://api.sakana.ai/v1"
+env_key = "SAKANA_FUGU_API_KEY"
+env_key_instructions = "Set SAKANA_FUGU_API_KEY in your shell or secret manager."
+wire_api = "responses"
+
+[plugins."github@openai-curated"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."notion@openai-curated"]
+enabled = true
+
+[plugins."google-calendar@openai-curated"]
+enabled = true
+
+[plugins."discord@claude-plugins-official"]
+enabled = true
+
+[plugins."imessage@claude-plugins-official"]
+enabled = true
+
+[plugins."codex@openai-codex"]
+enabled = true
+
+[plugins."frontend-design@claude-plugins-official"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/"
+
+[mcp_servers.github.http_headers]
+Authorization = "Bearer ${GITHUB_COPILOT_MCP_TOKEN}"

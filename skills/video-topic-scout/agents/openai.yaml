@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Topic Scout"
+  short_description: "Find and score high-potential video topics"
+  default_prompt: "Use $video-topic-scout to find and rank promising video topics for my audience."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Stop-Gate Review"
+  short_description: "Terse previous-turn ship gate"
+  default_prompt: "Use $stop-gate-review to review only the immediately previous Claude turn."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Video Growth Pipeline"
+  short_description: "Orchestrate topic, script, video, and publishing"
+  default_prompt: "Use $video-growth-pipeline to plan and execute a hit-focused video workflow from topic research to publishing."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apple Shortcuts Builder"
+  short_description: "Build signed Apple Shortcut files"
+  default_prompt: "Use $apple-shortcuts-builder to create an importable iOS Shortcut from my requirements."
