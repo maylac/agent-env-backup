@@ -11,6 +11,10 @@
 
 Auto-memory lives under `~/.claude/projects/<current-project>/memory/` (types: user, feedback, project, reference). Use it proactively, and **always verify memory against current files before acting** -- paths, names, and state drift.
 
+# Prompt Interpretation
+
+Assume many user prompts are dictated by voice and may include transcription errors, typos, omitted words, or unusual punctuation. Use context to reconstruct the likely intent and act on that interpretation. Ask only when the ambiguity changes scope, safety, destination, data loss risk, credentials, or another irreversible decision.
+
 # Codex Collaboration
 
 For heavy tasks -- long research, multi-file refactors, complex implementation -- consider delegating to `mcp__codex__codex` when it would materially preserve context. Continue sessions with `mcp__codex__codex-reply` + sessionId.

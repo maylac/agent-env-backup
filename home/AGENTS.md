@@ -17,6 +17,10 @@ Before non-trivial code edits:
 - Do not touch unrelated files or refactor adjacent code.
 - Verify with the narrowest relevant command before finishing.
 
+## Voice Input Assumption
+
+Assume many user prompts are dictated by voice and may contain speech-to-text errors, typos, missing words, or odd punctuation. Infer the intended meaning from context and proceed with the most likely interpretation. Ask a clarifying question only when the ambiguity affects scope, safety, destination, data loss, credentials, or another irreversible choice.
+
 ## Tool Use Rules
 
 - For X/Twitter information gathering, prefer `agmsg` with a Grok Build teammate when available; do not default to browser scraping or unofficial X automation.
