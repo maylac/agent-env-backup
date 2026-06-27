@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "purpose": "Keep Claude Code and Codex behavior aligned without forcing incompatible config files to be identical.",
+  "principles": [
+    "Use shared instruction sources where possible.",
+    "Pair hooks when both tools expose compatible lifecycle behavior.",
+    "Keep mutable or secret-bearing settings live, and track only public-safe templates.",
+    "Document intentional divergence instead of leaving unexplained drift."
+  ],
+  "activation": [
+    {
+      "id": "home-agent-instructions",
+      "live": "~/AGENTS.md",
+      "source": "home/AGENTS.md",
+      "mode": "symlink"
+    },
+    {
+      "id": "claude-entrypoint",
+      "live": "~/.claude/CLAUDE.md",
+      "source": "claude/CLAUDE.md",
+      "mode": "symlink"
+    },
+    {
+      "id": "codex-entrypoint",
+      "live": "~/.codex/AGENTS.md",
+      "source": "../AGENTS.md",
+      "mode": "symlink"
+    },
+    {
+      "id": "codex-hook-registration",
+      "live": "~/.codex/hooks.json",
+      "source": "codex/hooks.json",
+      "mode": "materialize-home"
+    },
+    {
+      "id": "claude-settings",
+      "live": "~/.claude/settings.json",
+      "source": "templates/claude-settings.public.json",
+      "mode": "live-mutable-template"
+    }
+  ],
+  "hook_pairs": [
+    {
+      "id": "rtk-rewrite",
+      "event": "PreToolUse",
+      "matcher": "Bash",
+      "claude_script": "claude/hooks/rtk-rewrite.sh",
+      "codex_script": "codex/hooks/rtk-rewrite.sh",
+      "claude_registration": "~/.claude/settings.json",
+      "codex_registration": "~/.codex/hooks.json"
+    },
+    {
+      "id": "ghostty-fronting",
+      "event": "Stop",
+      "claude_registration": "~/.claude/settings.json",
+      "codex_registration": "~/.codex/hooks.json"
+    }
+  ],
+  "intentional_differences": [
+    {
+      "id": "claude-settings-json",
+      "reason": "Claude settings are hierarchical and mutable; keep a public-safe template instead of symlinking live settings."
+    },
+    {
+      "id": "codex-config-toml",
+      "reason": "Codex config.toml contains local paths, provider choices, MCP auth headers, and hook trust state; keep a redacted public template only."
+    },
+    {
+      "id": "claude-notification-hooks",
+      "reason": "Claude has Notification, Elicitation, and PermissionRequest hooks that do not map cleanly to the current Codex hook surface."
+    }
+  ]
+}

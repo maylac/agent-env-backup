@@ -12,6 +12,7 @@ repo keeps reusable assets and restore instructions:
 - Claude/Codex instruction files, RTK guidance, rules, agents, commands, and hooks that pass redaction checks
 - plugin inventory and restore notes
 - public templates for settings that should not be copied verbatim
+- an AI config sync manifest and audit for Claude/Codex paired behavior
 - validation scripts that block common secret and local-path leaks
 
 ## Layout
@@ -32,6 +33,7 @@ templates/           Public-safe config templates
 ```sh
 scripts/backup.sh
 scripts/validate.sh
+scripts/audit-sync.sh
 ```
 
 Refresh only the canonical instruction snapshot:

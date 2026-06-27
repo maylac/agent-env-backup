@@ -68,6 +68,39 @@ compare_file() {
   diff -u "$dest" "$src" | sed -n '1,120p' || true
 }
 
+materialize_home() {
+  awk -v home="$HOME" '{ gsub(/\$HOME/, home); print }' "$1"
+}
+
+compare_materialized_file() {
+  local src="$1"
+  local dest="$2"
+  local label="$3"
+  local tmp
+
+  if [ ! -e "$src" ]; then
+    printf 'missing snapshot: %s (%s)\n' "$src" "$label"
+    return 0
+  fi
+
+  if [ ! -e "$dest" ]; then
+    printf 'would materialize missing: %s -> %s\n' "$src" "$dest"
+    return 0
+  fi
+
+  tmp="$(mktemp)"
+  materialize_home "$src" > "$tmp"
+  if cmp -s "$tmp" "$dest"; then
+    printf 'same materialized: %s\n' "$dest"
+    rm -f "$tmp"
+    return 0
+  fi
+
+  printf 'diff materialized: %s\n' "$label"
+  diff -u "$dest" "$tmp" | sed -n '1,120p' || true
+  rm -f "$tmp"
+}
+
 compare_symlink() {
   local dest="$1"
   local expected="$2"
@@ -122,6 +155,28 @@ apply_symlink() {
   printf 'linked: %s -> %s (%s)\n' "$dest" "$src" "$label"
 }
 
+apply_materialized_file() {
+  local src="$1"
+  local dest="$2"
+  local label="$3"
+  local tmp
+
+  tmp="$(mktemp)"
+  materialize_home "$src" > "$tmp"
+
+  if [ -e "$dest" ] && cmp -s "$tmp" "$dest"; then
+    printf 'already materialized: %s (%s)\n' "$dest" "$label"
+    rm -f "$tmp"
+    return 0
+  fi
+
+  backup_target "$dest"
+  mkdir -p "$(dirname "$dest")"
+  cp "$tmp" "$dest"
+  rm -f "$tmp"
+  printf 'materialized: %s -> %s (%s)\n' "$src" "$dest" "$label"
+}
+
 show_instruction_dry_run() {
   printf 'Instruction restore dry-run:\n'
   compare_file "$ROOT/home/AGENTS.md" "$HOME/AGENTS.md" '~/AGENTS.md'
@@ -137,6 +192,7 @@ show_instruction_dry_run() {
   fi
 
   compare_symlink "$HOME/.codex/AGENTS.md" '../AGENTS.md' '~/.codex/AGENTS.md'
+  compare_materialized_file "$ROOT/codex/hooks.json" "$HOME/.codex/hooks.json" '~/.codex/hooks.json'
 
   printf '\nCanonical symlink plan:\n'
   compare_symlink "$HOME/AGENTS.md" "$ROOT/home/AGENTS.md" '~/AGENTS.md'
@@ -146,6 +202,7 @@ show_instruction_dry_run() {
   compare_symlink "$HOME/.claude/RTK.md" "$ROOT/claude/RTK.md" '~/.claude/RTK.md'
   compare_symlink "$HOME/.claude/rules/common" "$ROOT/claude/rules/common" '~/.claude/rules/common'
   compare_symlink "$HOME/.codex/AGENTS.md" '../AGENTS.md' '~/.codex/AGENTS.md'
+  printf 'materialized file: %s -> %s (%s)\n' "$ROOT/codex/hooks.json" "$HOME/.codex/hooks.json" '~/.codex/hooks.json'
 }
 
 apply_instruction_symlinks() {
@@ -157,6 +214,7 @@ apply_instruction_symlinks() {
   apply_symlink "$ROOT/claude/RTK.md" "$HOME/.claude/RTK.md" '~/.claude/RTK.md'
   apply_symlink "$ROOT/claude/rules/common" "$HOME/.claude/rules/common" '~/.claude/rules/common'
   apply_symlink '../AGENTS.md' "$HOME/.codex/AGENTS.md" '~/.codex/AGENTS.md'
+  apply_materialized_file "$ROOT/codex/hooks.json" "$HOME/.codex/hooks.json" '~/.codex/hooks.json'
 
   if [ -n "$BACKUP_DIR" ]; then
     printf 'Backed up replaced instruction files under: %s\n' "$BACKUP_DIR"

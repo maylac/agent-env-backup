@@ -16,7 +16,8 @@ Refresh the public-safe backup snapshot.
 Options:
   --instructions-only  Refresh only home/AGENTS.md, home/CLAUDE.md,
                        claude/CLAUDE.md, claude/AGENTS.md, claude/RTK.md,
-                       claude/rules/common, and codex/AGENTS.md.
+                       claude/rules/common, codex/AGENTS.md, and
+                       codex/hooks.json.
 USAGE
 }
 
@@ -125,6 +126,8 @@ sync_instruction_files() {
   else
     sync_file "$HOME_DIR/.codex/AGENTS.md" "$ROOT/codex/AGENTS.md"
   fi
+
+  sync_file "$HOME_DIR/.codex/hooks.json" "$ROOT/codex/hooks.json"
 }
 
 sanitize_instruction_files() {
@@ -134,6 +137,7 @@ sanitize_instruction_files() {
   sanitize_file "$ROOT/claude/RTK.md"
   sanitize_tree "$ROOT/claude/rules/common"
   [ -L "$ROOT/codex/AGENTS.md" ] || sanitize_file "$ROOT/codex/AGENTS.md"
+  sanitize_file "$ROOT/codex/hooks.json"
 }
 
 write_codex_template() {
@@ -268,6 +272,7 @@ write_inventory() {
     printf '%s\n' '- `~/.claude/commands`'
     printf '%s\n' '- `~/.claude/hooks` excluding trust-hash state'
     printf '%s\n' '- `~/.codex/AGENTS.md` normalized to point at the repo home snapshot'
+    printf '%s\n' '- `~/.codex/hooks.json` with local home paths sanitized'
     printf '%s\n' '- `~/.codex/agents`'
     printf '%s\n\n' '- `~/.codex/hooks` excluding trust-hash state'
     printf '## Excluded sources\n\n'

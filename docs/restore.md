@@ -50,6 +50,7 @@ Canonical snapshots:
 - `claude/AGENTS.md`
 - `claude/rules/common`
 - `codex/AGENTS.md`
+- `codex/hooks.json`
 
 The intended symlink shape is:
 
@@ -60,6 +61,16 @@ The intended symlink shape is:
 ~/.claude/AGENTS.md -> <repo>/claude/AGENTS.md
 ~/.claude/rules/common -> <repo>/claude/rules/common
 ~/.codex/AGENTS.md -> ../AGENTS.md
+```
+
+The live `~/.codex/hooks.json` is not symlinked. It is materialized from
+`codex/hooks.json` with `$HOME` expanded so the active Codex hook trust state
+can continue to refer to the live file path.
+
+Check Claude/Codex paired behavior after restore:
+
+```sh
+scripts/audit-sync.sh
 ```
 
 The backup sanitizer rewrites local home paths and Claude project-id fragments
@@ -82,11 +93,15 @@ Review these directories before applying:
 Do not copy auth, channel, session, project, telemetry, cache, or
 `settings.local.json` state into this repo.
 
+Claude `settings.json` is kept as a live mutable file. The public template is a
+restore guide; the audit checks the shared behavior that must match Codex.
+
 ## Codex
 
 Review these directories before applying:
 
 - `codex/AGENTS.md`
+- `codex/hooks.json`
 - `codex/agents`
 - `codex/hooks`
 - `templates/codex-config.public.toml`

@@ -42,6 +42,12 @@ check_json() {
   if [ -f "$ROOT/templates/claude-settings.public.json" ]; then
     jq empty "$ROOT/templates/claude-settings.public.json" || fail "invalid JSON: templates/claude-settings.public.json"
   fi
+  if [ -f "$ROOT/codex/hooks.json" ]; then
+    jq empty "$ROOT/codex/hooks.json" || fail "invalid JSON: codex/hooks.json"
+  fi
+  if [ -f "$ROOT/manifests/ai-config-sync.json" ]; then
+    jq empty "$ROOT/manifests/ai-config-sync.json" || fail "invalid JSON: manifests/ai-config-sync.json"
+  fi
 }
 
 check_shell() {
@@ -55,6 +61,8 @@ check_no_paths
 check_skills
 check_json
 check_shell
+
+bash "$ROOT/scripts/audit-sync.sh" || failed=1
 
 check_no_matches 'Private home paths remain:' '(/Users/(maylac|gotasaki)|-Users-(maylac|gotasaki))'
 check_no_matches 'Email address remains:' 'may\.lac1206@gmail\.com'
