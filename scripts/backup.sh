@@ -15,7 +15,7 @@ Refresh the public-safe backup snapshot.
 
 Options:
   --instructions-only  Refresh only home/AGENTS.md, home/CLAUDE.md,
-                       claude/CLAUDE.md, claude/AGENTS.md,
+                       claude/CLAUDE.md, claude/AGENTS.md, claude/RTK.md,
                        claude/rules/common, and codex/AGENTS.md.
 USAGE
 }
@@ -116,6 +116,7 @@ sync_instruction_files() {
 
   sync_file "$HOME_DIR/.claude/CLAUDE.md" "$ROOT/claude/CLAUDE.md"
   sync_file "$HOME_DIR/.claude/AGENTS.md" "$ROOT/claude/AGENTS.md"
+  sync_file "$HOME_DIR/.claude/RTK.md" "$ROOT/claude/RTK.md"
   sync_dir "$HOME_DIR/.claude/rules/common" "$ROOT/claude/rules/common"
 
   rm -f "$ROOT/codex/AGENTS.md"
@@ -130,6 +131,7 @@ sanitize_instruction_files() {
   sanitize_tree "$ROOT/home"
   sanitize_file "$ROOT/claude/CLAUDE.md"
   sanitize_file "$ROOT/claude/AGENTS.md"
+  sanitize_file "$ROOT/claude/RTK.md"
   sanitize_tree "$ROOT/claude/rules/common"
   [ -L "$ROOT/codex/AGENTS.md" ] || sanitize_file "$ROOT/codex/AGENTS.md"
 }
@@ -261,7 +263,7 @@ write_inventory() {
     printf '## Included sources\n\n'
     printf '%s\n' '- `~/.agents/skills` excluding runtime state, `gstack`, and `capafy-publisher`'
     printf '%s\n' '- `~/AGENTS.md` and `~/CLAUDE.md` symlink state'
-    printf '%s\n' '- `~/.claude/CLAUDE.md`, `~/.claude/AGENTS.md`, and `~/.claude/rules/common`'
+    printf '%s\n' '- `~/.claude/CLAUDE.md`, `~/.claude/AGENTS.md`, `~/.claude/RTK.md`, and `~/.claude/rules/common`'
     printf '%s\n' '- `~/.claude/agents`'
     printf '%s\n' '- `~/.claude/commands`'
     printf '%s\n' '- `~/.claude/hooks` excluding trust-hash state'

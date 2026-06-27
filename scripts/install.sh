@@ -128,6 +128,7 @@ show_instruction_dry_run() {
   compare_symlink "$HOME/CLAUDE.md" 'AGENTS.md' '~/CLAUDE.md'
   compare_file "$ROOT/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md" '~/.claude/CLAUDE.md'
   compare_file "$ROOT/claude/AGENTS.md" "$HOME/.claude/AGENTS.md" '~/.claude/AGENTS.md'
+  compare_file "$ROOT/claude/RTK.md" "$HOME/.claude/RTK.md" '~/.claude/RTK.md'
 
   if [ -d "$ROOT/claude/rules/common" ]; then
     while IFS= read -r -d '' rule; do
@@ -142,6 +143,7 @@ show_instruction_dry_run() {
   compare_symlink "$HOME/CLAUDE.md" 'AGENTS.md' '~/CLAUDE.md'
   compare_symlink "$HOME/.claude/CLAUDE.md" "$ROOT/claude/CLAUDE.md" '~/.claude/CLAUDE.md'
   compare_symlink "$HOME/.claude/AGENTS.md" "$ROOT/claude/AGENTS.md" '~/.claude/AGENTS.md'
+  compare_symlink "$HOME/.claude/RTK.md" "$ROOT/claude/RTK.md" '~/.claude/RTK.md'
   compare_symlink "$HOME/.claude/rules/common" "$ROOT/claude/rules/common" '~/.claude/rules/common'
   compare_symlink "$HOME/.codex/AGENTS.md" '../AGENTS.md' '~/.codex/AGENTS.md'
 }
@@ -152,6 +154,7 @@ apply_instruction_symlinks() {
   apply_symlink 'AGENTS.md' "$HOME/CLAUDE.md" '~/CLAUDE.md'
   apply_symlink "$ROOT/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md" '~/.claude/CLAUDE.md'
   apply_symlink "$ROOT/claude/AGENTS.md" "$HOME/.claude/AGENTS.md" '~/.claude/AGENTS.md'
+  apply_symlink "$ROOT/claude/RTK.md" "$HOME/.claude/RTK.md" '~/.claude/RTK.md'
   apply_symlink "$ROOT/claude/rules/common" "$HOME/.claude/rules/common" '~/.claude/rules/common'
   apply_symlink '../AGENTS.md' "$HOME/.codex/AGENTS.md" '~/.codex/AGENTS.md'
 

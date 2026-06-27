@@ -9,7 +9,7 @@ repo keeps reusable assets and restore instructions:
 
 - public-safe global skills from `~/.agents/skills`
 - home-level `AGENTS.md` / `CLAUDE.md` instruction snapshots
-- Claude/Codex instruction files, rules, agents, commands, and hooks that pass redaction checks
+- Claude/Codex instruction files, RTK guidance, rules, agents, commands, and hooks that pass redaction checks
 - plugin inventory and restore notes
 - public templates for settings that should not be copied verbatim
 - validation scripts that block common secret and local-path leaks
@@ -19,7 +19,7 @@ repo keeps reusable assets and restore instructions:
 ```text
 skills/              Public-safe global skills
 home/                Home-level AGENTS.md and CLAUDE.md symlink snapshot
-claude/              Claude Code instructions, rules, agents, commands, hooks, and plugin inventory
+claude/              Claude Code instructions, RTK guidance, rules, agents, commands, hooks, and plugin inventory
 codex/               Codex instructions, agents, hooks, and plugin inventory
 docs/                Restore and public-safety notes
 manifests/           Generated inventory and exclusion notes
