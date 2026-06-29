@@ -1,11 +1,18 @@
 ---
 name: udemy-learning-pipeline
-description: Udemyの受講済み講座から学習資産を自動構築するフルパイプライン。トランスクリプト一括収集→学習資産MD生成→NotebookLMジャンル別ノート作成までを一気通貫で実行する。トリガー: Udemyトランスクリプトを収集したい、学習資産を作りたい、NotebookLMにまとめてアップしたい。
+description: "Udemyの受講済み講座から学習資産を自動構築するフルパイプライン。トランスクリプト一括収集→学習資産MD生成→NotebookLMジャンル別ノート作成までを一気通貫で実行する。トリガー: Udemyトランスクリプトを収集したい、学習資産を作りたい、NotebookLMにまとめてアップしたい。"
 ---
 
 # Udemy Learning Pipeline
 
 Udemy受講済み講座のトランスクリプトを収集し、学習資産として整理してNotebookLMにアップロードするフルパイプライン。
+
+## 運用原則
+
+- 動画本体は取得しない。収集対象は、正規アクセスできる字幕VTT、Udemy APIメタデータ、講座のsupplementary resources、公開公式Docsに限定する。
+- transcriptが取れない講座は「未取得」と明記し、講座メタデータ、配布資料、公式Docsで補強する。本文を推測して完全な講義要約として扱わない。
+- 長いtranscriptは先頭だけで完結扱いしない。分割要約、章単位処理、または「partial」と明記した出力にする。
+- 検索時点の `enrolled` 表示と、登録後の `subscribed-courses/{course_id}` 検証結果を混同しない。
 
 ## スクリプトの場所
 
@@ -61,6 +68,20 @@ ls ~/dev/udemy-transcripts/transcripts/*.md | wc -l
 - 字幕なしコース（模擬試験・DRM等）は自動スキップ
 - 既存 MD があるコースはスキップ（冪等）
 
+### 1-4. Udemy Business検索から講座を拡張する場合
+
+テナント内検索は、公開UdemyではなくBusiness tenantを使う。
+
+```text
+GET https://toyotajp.udemy.com/api-2.0/organizations/199704/search-courses/v2/?q=<query>&skip_price=true&page_size=50&src=sac
+```
+
+- 検索候補は `/tmp/udemy_<topic>_search_candidates_<date>.json` のように保存する。
+- 候補選定はCSVやスコアを鵜呑みにせず、今回の学習目的、キャリア戦略、既存ローカル資産の不足から絞る。
+- 登録確認は、検索APIで得た `id` を正として `GET /api-2.0/users/me/subscribed-courses/{id}/?fields[course]=id,title,url` で検証する。
+- ブラウザページで捕捉した別リクエストのcourse_idは、ページ遷移タイミング次第で直前講座のIDを拾うことがあるため、登録検証の正本にしない。
+- 登録できない講座は `no_enroll_button` などの状態を残し、ノートには未登録/未確認として記載する。
+
 ---
 
 ## Step 2: 学習資産生成（Codexが直接実施）
@@ -96,7 +117,7 @@ ls ~/dev/udemy-transcripts/transcripts/*.md | wc -l
 
 2. 未処理ファイルを特定して1件ずつ処理
    - 字幕誤変換（例: Dify→DIY/リファイ、LLM→LLVM）は正しい表記に修正
-   - 長大なトランスクリプトは先頭30,000文字を使用
+   - 長大なトランスクリプトは章単位またはチャンク単位で処理し、先頭だけを使う場合は `partial` と明記する
 
 3. 処理済みとして記録（同名ファイルが存在する場合はスキップ）
 
@@ -109,6 +130,18 @@ screen -dmS make-assets bash -c "
     >> /tmp/make_assets.log 2>&1
 "
 ```
+
+---
+
+## Step 2.5: ダウンロードリソース確認
+
+講座に配布資料がある場合は、講義ノート生成前にsupplementary resourcesを確認する。
+
+- 全体収集: `collect_udemy_downloadables.py` を使う。
+- focused research: 対象course_idだけを処理する小さなmanifestを作り、既存の全体manifestを不用意に上書きしない。
+- manifestには `downloaded`、`external_link`、`metadata_only`、`download_failed` を分けて記録する。
+- 外部リンクは本文をコピーせず、リンク、講義名、用途を記録する。
+- ZIP、PDF、DOCX、XLSXなどの配布ファイルは、ライセンス範囲内のローカル学習用素材として保存し、再配布しない。
 
 ---
 
